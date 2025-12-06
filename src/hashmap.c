@@ -120,7 +120,7 @@ static void hm_ins_helper_(BORROWED hashmap_entry_t ** entries, COPIED uint64_t 
 
 void _hm_ins(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
 {
-    COPIED Result result = _hm_try_ins(hm, key, val);
+    COPIED result_t result = _hm_try_ins(hm, key, val);
     if (RESULT_IS_OK(result))
     {
         return;
@@ -169,7 +169,7 @@ void _hm_ins_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key, COPIED OW
 
 OWNED option_t * _hm_set(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
 {
-    COPIED Result result = _hm_try_set(hm, key, val);
+    COPIED result_t result = _hm_try_set(hm, key, val);
     if (RESULT_IS_OK(result))
     {
         return (option_t *) RESULT_UNWRAP(result);
@@ -215,7 +215,7 @@ OWNED option_t * _hm_set_with_owned_key(BORROWED hashmap_t * hm, OWNED char * ke
 
 uintptr_t hm_get(BORROWED hashmap_t * hm, BORROWED const char * key)
 {
-    COPIED Result result = hm_try_get(hm, key);
+    COPIED result_t result = hm_try_get(hm, key);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -259,7 +259,7 @@ uintptr_t hm_get(BORROWED hashmap_t * hm, BORROWED const char * key)
 
 uintptr_t hm_get_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 {
-    COPIED Result result = hm_try_get(hm, key);
+    COPIED result_t result = hm_try_get(hm, key);
     if (RESULT_IS_OK(result))
     {
         free_smart(key);
@@ -311,7 +311,7 @@ uintptr_t hm_get_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 void hm_del(BORROWED hashmap_t * hm, BORROWED const char * key)
 {
 
-    COPIED Result result = hm_try_del(hm, key);
+    COPIED result_t result = hm_try_del(hm, key);
     if (RESULT_IS_OK(result))
     {
         return;
@@ -358,7 +358,7 @@ void hm_del_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
     free_smart(key);
 }
 
-COPIED Result hm_try_get(BORROWED hashmap_t * hm, BORROWED const char * key)
+COPIED result_t hm_try_get(BORROWED hashmap_t * hm, BORROWED const char * key)
 {
     if (!hm)
     {
@@ -397,14 +397,14 @@ COPIED Result hm_try_get(BORROWED hashmap_t * hm, BORROWED const char * key)
     return RESULT_ERR(4);
 }
 
-COPIED Result hm_try_get_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
+COPIED result_t hm_try_get_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 {
-    COPIED Result result = hm_try_get(hm, key);
+    COPIED result_t result = hm_try_get(hm, key);
     free_smart(key);
     return result;
 }
 
-COPIED Result _hm_try_ins(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
+COPIED result_t _hm_try_ins(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
 {
     if (!hm)
     {
@@ -461,14 +461,14 @@ COPIED Result _hm_try_ins(BORROWED hashmap_t * hm, BORROWED const char * key, CO
     return RESULT_OK(0);
 }
 
-COPIED Result _hm_try_ins_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key, COPIED OWNED BORROWED uintptr_t val)
+COPIED result_t _hm_try_ins_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key, COPIED OWNED BORROWED uintptr_t val)
 {
-    COPIED Result result = _hm_try_ins(hm, key, val);
+    COPIED result_t result = _hm_try_ins(hm, key, val);
     free_smart(key);
     return result;
 }
 
-COPIED Result _hm_try_set(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
+COPIED result_t _hm_try_set(BORROWED hashmap_t * hm, BORROWED const char * key, COPIED OWNED BORROWED uintptr_t val)
 {
     if (!hm)
     {
@@ -528,14 +528,14 @@ COPIED Result _hm_try_set(BORROWED hashmap_t * hm, BORROWED const char * key, CO
     return RESULT_OK(OPTIONP_NONE());
 }
 
-COPIED Result _hm_try_set_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key, COPIED OWNED BORROWED uintptr_t val)
+COPIED result_t _hm_try_set_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key, COPIED OWNED BORROWED uintptr_t val)
 {
-    COPIED Result result = _hm_try_set(hm, key, val);
+    COPIED result_t result = _hm_try_set(hm, key, val);
     free_smart(key);
     return result;
 }
 
-COPIED Result hm_try_del(BORROWED hashmap_t * hm, BORROWED const char * key)
+COPIED result_t hm_try_del(BORROWED hashmap_t * hm, BORROWED const char * key)
 {
     if (!hm)
     {
@@ -586,16 +586,16 @@ COPIED Result hm_try_del(BORROWED hashmap_t * hm, BORROWED const char * key)
     return RESULT_ERR(4);
 }
 
-COPIED Result hm_try_del_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
+COPIED result_t hm_try_del_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 {
-    COPIED Result result = hm_try_del(hm, key);
+    COPIED result_t result = hm_try_del(hm, key);
     free_smart(key);
     return result;
 }
 
 bool hm_has(BORROWED hashmap_t * hm, BORROWED const char * key)
 {
-    COPIED Result result = hm_try_get(hm, key);
+    COPIED result_t result = hm_try_get(hm, key);
     if (RESULT_IS_OK(result))
     {
         return true;
@@ -605,7 +605,7 @@ bool hm_has(BORROWED hashmap_t * hm, BORROWED const char * key)
 
 bool hm_has_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 {
-    COPIED Result result = hm_try_get_with_owned_key(hm, key);
+    COPIED result_t result = hm_try_get_with_owned_key(hm, key);
     if (RESULT_IS_OK(result))
     {
         return true;
@@ -615,7 +615,7 @@ bool hm_has_with_owned_key(BORROWED hashmap_t * hm, OWNED char * key)
 
 uint64_t hm_get_size(BORROWED hashmap_t * hm)
 {
-    COPIED Result result = hm_try_get_size(hm);
+    COPIED result_t result = hm_try_get_size(hm);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -637,7 +637,7 @@ uint64_t hm_get_size(BORROWED hashmap_t * hm)
     return 0; // unreachable, satisfies compiler
 }
 
-COPIED Result hm_try_get_size(BORROWED hashmap_t * hm)
+COPIED result_t hm_try_get_size(BORROWED hashmap_t * hm)
 {
     if (!hm)
     {
@@ -648,7 +648,7 @@ COPIED Result hm_try_get_size(BORROWED hashmap_t * hm)
 
 COPIED uint64_t hm_get_capacity(BORROWED hashmap_t * hm)
 {
-    COPIED Result result = hm_try_get_capacity(hm);
+    COPIED result_t result = hm_try_get_capacity(hm);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -670,7 +670,7 @@ COPIED uint64_t hm_get_capacity(BORROWED hashmap_t * hm)
     return 0; // unreachable, satisfies compiler
 }
 
-COPIED Result hm_try_get_capacity(BORROWED hashmap_t * hm)
+COPIED result_t hm_try_get_capacity(BORROWED hashmap_t * hm)
 {
     if (!hm)
     {
@@ -682,7 +682,7 @@ COPIED Result hm_try_get_capacity(BORROWED hashmap_t * hm)
 
 void hm_fit(BORROWED hashmap_t * hm, const uint64_t new_cap)
 {
-    COPIED Result result = hm_try_fit(hm, new_cap);
+    COPIED result_t result = hm_try_fit(hm, new_cap);
     if (RESULT_IS_OK(result))
     {
 
@@ -719,7 +719,7 @@ void hm_fit(BORROWED hashmap_t * hm, const uint64_t new_cap)
     }
 }
 
-COPIED Result hm_try_fit(BORROWED hashmap_t * hm, const uint64_t new_cap)
+COPIED result_t hm_try_fit(BORROWED hashmap_t * hm, const uint64_t new_cap)
 {
     if (!hm)
     {

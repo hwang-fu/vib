@@ -75,7 +75,7 @@ OWNED queue_t * mk_q(COPIED queue_init_t mode, ...)
 
 COPIED OWNED BORROWED uintptr_t q_at(BORROWED queue_t * q, COPIED uint64_t idx)
 {
-    COPIED Result result = q_try_at(q, idx);
+    COPIED result_t result = q_try_at(q, idx);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -104,7 +104,7 @@ COPIED OWNED BORROWED uintptr_t q_at(BORROWED queue_t * q, COPIED uint64_t idx)
 
 void _q_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 {
-    COPIED Result result = _q_try_unshift(q, data);
+    COPIED result_t result = _q_try_unshift(q, data);
     if (RESULT_IS_OK(result))
     {
         return;
@@ -132,7 +132,7 @@ void _q_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 
 void _q_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 {
-    COPIED Result result = _q_try_enqueue(q, data);
+    COPIED result_t result = _q_try_enqueue(q, data);
     if (RESULT_IS_OK(result))
     {
         return;
@@ -160,7 +160,7 @@ void _q_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 
 COPIED OWNED BORROWED uintptr_t q_peek(BORROWED queue_t * q)
 {
-    COPIED Result result = q_try_peek(q);
+    COPIED result_t result = q_try_peek(q);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -189,7 +189,7 @@ COPIED OWNED BORROWED uintptr_t q_peek(BORROWED queue_t * q)
 
 COPIED OWNED BORROWED uintptr_t q_rear(BORROWED queue_t * q)
 {
-    COPIED Result result = q_try_rear(q);
+    COPIED result_t result = q_try_rear(q);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -218,7 +218,7 @@ COPIED OWNED BORROWED uintptr_t q_rear(BORROWED queue_t * q)
 
 COPIED OWNED BORROWED uintptr_t q_dequeue(BORROWED queue_t * q)
 {
-    COPIED Result result = q_try_dequeue(q);
+    COPIED result_t result = q_try_dequeue(q);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -247,7 +247,7 @@ COPIED OWNED BORROWED uintptr_t q_dequeue(BORROWED queue_t * q)
 
 COPIED OWNED BORROWED uintptr_t q_pop(BORROWED queue_t * q)
 {
-    COPIED Result result = q_try_pop(q);
+    COPIED result_t result = q_try_pop(q);
     if (RESULT_IS_OK(result))
     {
         return RESULT_UNWRAP(result);
@@ -274,7 +274,7 @@ COPIED OWNED BORROWED uintptr_t q_pop(BORROWED queue_t * q)
     return 0; // unreachable, satisfies compiler
 }
 
-COPIED Result q_try_at(BORROWED queue_t * q, COPIED uint64_t idx)
+COPIED result_t q_try_at(BORROWED queue_t * q, COPIED uint64_t idx)
 {
     if (!q)
     {
@@ -289,7 +289,7 @@ COPIED Result q_try_at(BORROWED queue_t * q, COPIED uint64_t idx)
     return RESULT_OK(q->elements[idx]);
 }
 
-COPIED Result _q_try_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
+COPIED result_t _q_try_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 {
     if (!q)
     {
@@ -318,7 +318,7 @@ COPIED Result _q_try_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr
     return RESULT_OK(0);
 }
 
-COPIED Result _q_try_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
+COPIED result_t _q_try_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data)
 {
     if (!q)
     {
@@ -346,7 +346,7 @@ COPIED Result _q_try_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr
     return RESULT_OK(0);
 }
 
-COPIED Result q_try_peek(BORROWED queue_t * q)
+COPIED result_t q_try_peek(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -361,7 +361,7 @@ COPIED Result q_try_peek(BORROWED queue_t * q)
     return RESULT_OK(q->elements[0]);
 }
 
-COPIED Result q_try_rear(BORROWED queue_t * q)
+COPIED result_t q_try_rear(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -377,7 +377,7 @@ COPIED Result q_try_rear(BORROWED queue_t * q)
     return RESULT_OK(q->elements[size-1]);
 }
 
-COPIED Result q_try_dequeue(BORROWED queue_t * q)
+COPIED result_t q_try_dequeue(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -396,7 +396,7 @@ COPIED Result q_try_dequeue(BORROWED queue_t * q)
     return RESULT_OK(data);
 }
 
-COPIED Result q_try_pop(BORROWED queue_t * q)
+COPIED result_t q_try_pop(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -417,7 +417,7 @@ COPIED uint64_t q_get_size(BORROWED queue_t * q)
     return q->size;
 }
 
-COPIED Result q_try_get_size(BORROWED queue_t * q)
+COPIED result_t q_try_get_size(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -433,7 +433,7 @@ COPIED uint64_t q_get_capacity(BORROWED queue_t * q)
     return q->capacity;
 }
 
-COPIED Result q_try_get_capacity(BORROWED queue_t * q)
+COPIED result_t q_try_get_capacity(BORROWED queue_t * q)
 {
     if (!q)
     {
@@ -445,7 +445,7 @@ COPIED Result q_try_get_capacity(BORROWED queue_t * q)
 
 void q_fit(BORROWED queue_t * q, COPIED uint64_t new_cap)
 {
-    COPIED Result result = q_try_fit(q, new_cap);
+    COPIED result_t result = q_try_fit(q, new_cap);
     if (RESULT_IS_OK(result))
     {
         return;
@@ -473,7 +473,7 @@ void q_fit(BORROWED queue_t * q, COPIED uint64_t new_cap)
     }
 }
 
-COPIED Result q_try_fit(BORROWED queue_t * q, COPIED uint64_t new_cap)
+COPIED result_t q_try_fit(BORROWED queue_t * q, COPIED uint64_t new_cap)
 {
     if (!q)
     {

@@ -25,12 +25,11 @@ typedef struct vector_item_t vector_item_t;
 typedef vector_t * vector_p;
 typedef vector_item_t * vector_item_p;
 
-typedef enum vector_init_t vector_init_t;
-enum vector_init_t
+typedef enum vector_init_t
 {
     VECTOR_INIT_DEFAULT = 0,
     VECTOR_INIT_CAPACITY_ONLY,
-};
+} vector_init_t;
 
 struct vector_t
 {
@@ -58,35 +57,35 @@ COPIED OWNED BORROWED uintptr_t vector_popfront(BORROWED vector_t * vec);
 
 COPIED OWNED BORROWED uintptr_t vector_popback(BORROWED vector_t * vec);
 
-COPIED Result vector_try_at(BORROWED vector_t * vec, COPIED uint64_t idx);
+COPIED result_t vector_try_at(BORROWED vector_t * vec, COPIED uint64_t idx);
 
-COPIED Result vector_try_front(BORROWED vector_t * vec);
+COPIED result_t vector_try_front(BORROWED vector_t * vec);
 
-COPIED Result vector_try_back(BORROWED vector_t * vec);
+COPIED result_t vector_try_back(BORROWED vector_t * vec);
 
-COPIED Result vector_try_popfront(BORROWED vector_t * vec);
+COPIED result_t vector_try_popfront(BORROWED vector_t * vec);
 
-COPIED Result vector_try_popback(BORROWED vector_t * vec);
+COPIED result_t vector_try_popback(BORROWED vector_t * vec);
 
 void _vector_pushfront(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
 
 void _vector_pushback(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
 
-COPIED Result _vector_try_pushfront(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
+COPIED result_t _vector_try_pushfront(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
 
-COPIED Result _vector_try_pushback(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
+COPIED result_t _vector_try_pushback(BORROWED vector_t * vec, COPIED OWNED BORROWED uintptr_t value, BORROWED dispose_fn * cleanup);
 
 void vector_fit(BORROWED vector_t * vec, COPIED uint64_t new_cap);
 
-COPIED Result vector_try_fit(BORROWED vector_t * vec, COPIED uint64_t new_cap);
+COPIED result_t vector_try_fit(BORROWED vector_t * vec, COPIED uint64_t new_cap);
 
 COPIED uint64_t vector_get_size(BORROWED vector_t * vec);
 
-COPIED Result vector_try_get_size(BORROWED vector_t * vec);
+COPIED result_t vector_try_get_size(BORROWED vector_t * vec);
 
 COPIED uint64_t vector_get_capacity(BORROWED vector_t * vec);
 
-COPIED Result vector_try_get_capacity(BORROWED vector_t * vec);
+COPIED result_t vector_try_get_capacity(BORROWED vector_t * vec);
 
 COPIED bool vector_is_empty(BORROWED vector_t * vec);
 

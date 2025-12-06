@@ -21,15 +21,14 @@
 
 typedef struct queue_t queue_t;
 
-typedef enum queue_init_t queue_init_t;
-enum queue_init_t
+typedef enum queue_init_t
 {
     QUEUE_INIT_DEFAULT = 0,
     QUEUE_INIT_CAPACITY_ONLY,
     QUEUE_INIT_DISPOSE_ONLY,
     QUEUE_INIT_CAPACITY_DISPOSE,
     QUEUE_INIT_DISPOSE_CAPACITY,
-};
+} queue_init_t;
 
 struct queue_t
 {
@@ -65,31 +64,31 @@ COPIED OWNED BORROWED uintptr_t q_dequeue(BORROWED queue_t * q);
 
 COPIED OWNED BORROWED uintptr_t q_pop(BORROWED queue_t * q);
 
-COPIED Result q_try_at(BORROWED queue_t * q, COPIED uint64_t idx);
+COPIED result_t q_try_at(BORROWED queue_t * q, COPIED uint64_t idx);
 
-COPIED Result _q_try_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data);
+COPIED result_t _q_try_unshift(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data);
 
-COPIED Result _q_try_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data);
+COPIED result_t _q_try_enqueue(BORROWED queue_t * q, COPIED OWNED BORROWED uintptr_t data);
 
-COPIED Result q_try_peek(BORROWED queue_t * q);
+COPIED result_t q_try_peek(BORROWED queue_t * q);
 
-COPIED Result q_try_rear(BORROWED queue_t * q);
+COPIED result_t q_try_rear(BORROWED queue_t * q);
 
-COPIED Result q_try_dequeue(BORROWED queue_t * q);
+COPIED result_t q_try_dequeue(BORROWED queue_t * q);
 
-COPIED Result q_try_pop(BORROWED queue_t * q);
+COPIED result_t q_try_pop(BORROWED queue_t * q);
 
 COPIED uint64_t q_get_size(BORROWED queue_t * q);
 
-COPIED Result q_try_get_size(BORROWED queue_t * q);
+COPIED result_t q_try_get_size(BORROWED queue_t * q);
 
 COPIED uint64_t q_get_capacity(BORROWED queue_t * q);
 
-COPIED Result q_try_get_capacity(BORROWED queue_t * q);
+COPIED result_t q_try_get_capacity(BORROWED queue_t * q);
 
 void q_fit(BORROWED queue_t * q, COPIED uint64_t new_cap);
 
-COPIED Result q_try_fit(BORROWED queue_t * q, COPIED uint64_t new_cap);
+COPIED result_t q_try_fit(BORROWED queue_t * q, COPIED uint64_t new_cap);
 
 /**
  * @brief       If @param {q} is @const {NIL}, the function also returns @const {true}.
