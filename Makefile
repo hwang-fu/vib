@@ -73,3 +73,8 @@ help:
 	@echo "  run FILE=x   - Build and run with file x"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  help         - Show this help"
+
+# Line count
+.PHONY: linecount
+linecount:
+	@find . -type f \( -name "*.c" -o -name "*.h" \) -exec wc -l {} +
