@@ -10,20 +10,25 @@
 
 #include "common.h"
 
-#define VIB_TERM_DEFAULT_ROWS    (24UL)
-#define VIB_TERM_DEFAULT_COLUMNS (80UL)
+#define VIB_TERMINAL_DEFAULT_ROWS    (24UL)
+#define VIB_TERMINAL_DEFAULT_COLUMNS (80UL)
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ANSI Escape Sequences
  * ───────────────────────────────────────────────────────────────────────────── */
 
-#define ESC                 "\x1b"
-#define CSI                 ESC "["
+#define ESC                     "\x1b"
+#define CSI                     ESC "["
 
-#define SEQ_CLEAR_SCREEN    CSI "2J"
-#define SEQ_CURSOR_HOME     CSI "H"
-#define SEQ_CURSOR_HIDE     CSI "?25l"
-#define SEQ_CURSOR_SHOW     CSI "?25h"
+#define VIB_NORMAL_BUFFER       (CSI "?1049l")  // switch to normal buffer
+#define VIB_ALTERNATE_BUFFER    (CSI "?1049h")  // switch to alternate buffer
+
+#define VIB_CURSOR_HOME         (CSI "H")       // move cursor to (1,1) which is the top-left corner
+#define VIB_CURSOR_HIDE         (CSI "?25l")    // hide cursor
+#define VIB_CURSOR_SHOW         (CSI "?25h")    // show cursor
+#define VIB_CURSOR_LOCATION     (CSI "%d;%dH")  // move cursor to (row, column)
+
+#define VIB_TERMINAL_CLR        (CSI "2J")      // clear the entire terminal screen
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Module State
@@ -36,9 +41,9 @@ static struct {
     COPIED bool raw;                   /* True if raw mode is active */
     COPIED volatile sig_atomic_t resized;  /* Resize flag (signal-safe) */
 } _terminal_state = {
-    .rows = VIB_TERM_DEFAULT_ROWS,
-    .columns = VIB_TERM_DEFAULT_COLUMNS,
-    .raw = false,
+    .rows    = VIB_TERMINAL_DEFAULT_ROWS,
+    .columns = VIB_TERMINAL_DEFAULT_COLUMNS,
+    .raw     = false,
     .resized = 0,
 };
 
