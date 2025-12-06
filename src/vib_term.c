@@ -39,11 +39,13 @@ static struct {
     COPIED uint64_t rows;                   /* Terminal rows */
     COPIED uint64_t columns;                /* Terminal columns */
     COPIED bool raw;                   /* True if raw mode is active */
+    COPIED bool alt;                    /* True if alternate buffer is active */
     COPIED volatile sig_atomic_t resized;  /* Resize flag (signal-safe) */
 } _terminal_state = {
     .rows    = VIB_TERMINAL_DEFAULT_ROWS,
     .columns = VIB_TERMINAL_DEFAULT_COLUMNS,
     .raw     = false,
+    .alt     = false,
     .resized = 0,
 };
 
@@ -97,8 +99,10 @@ void vib_terminal_quit()
         return;
     }
 
-    TODO;
-    // ...
+    vib_terminal_cursor_show();
+    vib_terminal_clear();
+    vib_terminal_cursor_home();
+
     terminal_leave_raw_mode_();
 }
 
@@ -245,6 +249,37 @@ COPIED bool vib_terminal_was_resized(void)
 /* ─────────────────────────────────────────────────────────────────────────────
  * Terminal Screen (TUI) Operations
  * ───────────────────────────────────────────────────────────────────────────── */
+
+void vib_tui_use_normal_buffer()
+{
+    if (_terminal_state.alt)
+    {
+        vib_terminal_write(VIB_NORMAL_BUFFER, sizeof(VIB_NORMAL_BUFFER) - 1);
+        _terminal_state.alt = false;
+    }
+}
+
+void vib_tui_use_alternate_buffer()
+{
+    if (!_terminal_state.alt)
+    {
+        vib_terminal_write(VIB_ALTERNATE_BUFFER, sizeof(VIB_ALTERNATE_BUFFER) - 1);
+        _terminal_state.alt = true;
+    }
+}
+
+void vib_tui_toggle_buffer()
+{
+    if (_terminal_state.alt)
+    {
+        vib_terminal_write(VIB_NORMAL_BUFFER, sizeof(VIB_NORMAL_BUFFER) - 1);
+    }
+    else
+    {
+        vib_terminal_write(VIB_ALTERNATE_BUFFER, sizeof(VIB_ALTERNATE_BUFFER) - 1);
+    }
+    _terminal_state.alt = !_terminal_state.alt;
+}
 
 void vib_terminal_writef(BORROWED const char * fmt, ...)
 {

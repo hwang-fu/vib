@@ -62,3 +62,7 @@ void vib_terminal_cursor_hide();
 /** Show cursor. */
 void vib_terminal_cursor_show();
 
+void vib_tui_use_normal_buffer();
+void vib_tui_use_alternate_buffer();
+void vib_tui_toggle_buffer();
+
