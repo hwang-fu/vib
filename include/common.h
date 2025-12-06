@@ -33,6 +33,9 @@ typedef bool  Bool;
 #define BORROWED
 #define OWNED
 
+#define clone(x) (x)
+#define CLONE(x) (x)
+
 // -------------------------------------------------------------
 // | pointer / Reference helpers |
 // -------------------------------------------------------------

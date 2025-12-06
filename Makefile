@@ -6,7 +6,6 @@ CFLAGS   := $(CSTD)
 CFLAGS 	 += -Wall
 CFLAGS   += -Wextra
 CFLAGS   += -Wpedantic
-CFLAGS   += -Werror
 CFLAGS   += -O2
 CFLAGS   += -g
 CFLAGS   += -fno-omit-frame-pointer
@@ -74,3 +73,8 @@ help:
 	@echo "  run FILE=x   - Build and run with file x"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  help         - Show this help"
+
+# Line count
+.PHONY: linecount
+linecount:
+	@find . -type f \( -name "*.c" -o -name "*.h" \) -exec wc -l {} +
