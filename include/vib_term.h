@@ -17,10 +17,25 @@
  * - Queries initial terminal size
  *
  */
-COPIED result_t vib_term_init();
+COPIED result_t vib_terminal_init();
 
 /**
  * Restore terminal to original state.
  * Safe to call multiple times.
  */
-void vib_term_quit();
+void vib_terminal_quit();
+
+COPIED uint64_t vib_terminal_get_rows();
+COPIED uint64_t vib_terminal_get_columns();
+
+/**
+ * Refresh terminal size (call after resize).
+ */
+void vib_terminal_size_update();
+
+/**
+ * Check if terminal was resized since last check.
+ * Clears the flag after reading.
+ */
+COPIED bool vib_terminal_was_resized(void);
+
