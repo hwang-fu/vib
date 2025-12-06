@@ -78,10 +78,62 @@ void vib_term_quit()
 
 static void term_enter_raw_mode_()
 {
+    if (_term_state.raw)
+    {
+        return;
+    }
+
+    struct termios term = CLONE(_term_state.original);
+
+    /*
+     * Input flags:
+     * - IXON: Disable Ctrl-S/Ctrl-Q flow control
+     * - ICRNL: Disable CR to NL translation
+     * - BRKINT: Disable break condition signals
+     * - INPCK: Disable parity checking
+     * - ISTRIP: Disable stripping of 8th bit
+     */
+    term.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
+
+    /*
+     * Output flags:
+     * - OPOST: Disable output processing
+     */
+    term.c_oflag &= ~(OPOST);
+
+    /*
+     * Control flags:
+     * - CS8: Set character size to 8 bits
+     */
+    term.c_cflag |= (CS8);
+
+    /*
+     * Local flags:
+     * - ECHO: Disable echo
+     * - ICANON: Disable canonical mode (line buffering)
+     * - ISIG: Disable Ctrl-C/Ctrl-Z signals
+     * - IEXTEN: Disable Ctrl-V
+     */
+    term.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
+
+    /*
+     * Control characters:
+     * - VMIN: Minimum bytes for read (1 = blocking read)
+     * - VTIME: Timeout (0 = no timeout)
+     */
+    term.c_cc[VMIN] = 1;
+    term.c_cc[VTIME] = 0;
+
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 }
 
 static void term_leave_raw_mode_()
 {
+    if (!_term_state.raw)
+    {
+        return;
+    }
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &_term_state.original);
 }
 
 
