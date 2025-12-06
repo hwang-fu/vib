@@ -29,10 +29,12 @@ int main(int argc, const char * const argv[])
         if (strcmp_smart(arg, "--version"))
         {
             vib_print_version();
+            return 0;
         }
         if (strcmp_smart(arg, "--help"))
         {
             vib_print_usage(progname);
+            return 0;
         }
     }
 
