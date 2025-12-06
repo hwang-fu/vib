@@ -77,7 +77,8 @@ COPIED result_t vib_terminal_init()
     }
 
     terminal_enter_raw_mode_();
-    TODO; // ...
+    terminal_setup_raw_mode_signals_();
+    terminal_size_query_();
 
     atexit(vib_terminal_quit);
 
