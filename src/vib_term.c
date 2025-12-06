@@ -337,4 +337,7 @@ void vib_terminal_cursor_show()
     vib_terminal_write(VIB_CURSOR_SHOW, sizeof(VIB_CURSOR_SHOW) - 1);
 }
 
-
+void vib_terminal_flush()
+{
+    fflush(stdout);
+}
