@@ -24,8 +24,6 @@
 #define OPTION_UNWRAP(option)           (option_unwrap(option, NIL))
 #define OPTION_UNWRAP_ALT(option, alt)  (option_unwrap_alt(option, CAST(alt, uintptr_t)))
 
-typedef enum result_tag_t result_tag_t;
-typedef enum option_tag_t option_tag_t;
 typedef struct result_t result_t;
 typedef struct option_t option_t;
 
@@ -35,11 +33,11 @@ typedef option_t * option_p;
 typedef COPIED OWNED BORROWED uintptr_t result_callback_fn(COPIED OWNED BORROWED uintptr_t);
 typedef COPIED OWNED BORROWED uintptr_t option_callback_fn();
 
-enum result_tag_t
+typedef enum result_tag_t
 {
     T_RESULT_FAILURE = 0,
     T_RESULT_SUCCESS = 1,
-};
+} result_tag_t;
 
 struct result_t
 {
@@ -58,11 +56,11 @@ COPIED result_t mk_result_err(COPIED OWNED BORROWED uintptr_t err);
 COPIED OWNED BORROWED uintptr_t result_unwrap(COPIED result_t result, BORROWED result_callback_fn * onerr);
 COPIED OWNED BORROWED uintptr_t result_unwrap_alt(COPIED result_t result, COPIED OWNED BORROWED uintptr_t alternative);
 
-enum option_tag_t
+typedef enum option_tag_t
 {
     T_OPTION_NONE = 0,
     T_OPTION_SOME = 1,
-};
+} option_tag_t;
 
 struct option_t
 {
