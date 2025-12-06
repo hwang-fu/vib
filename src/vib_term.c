@@ -10,6 +10,9 @@
 
 #include "common.h"
 
+#define VIB_TERM_DEFAULT_ROWS    (24)
+#define VIB_TERM_DEFAULT_COLUMNS (80)
+
 /* ─────────────────────────────────────────────────────────────────────────────
  * ANSI Escape Sequences
  * ───────────────────────────────────────────────────────────────────────────── */
@@ -29,13 +32,13 @@
 static struct {
     struct termios original;    /* Original terminal attributes */
     int rows;                   /* Terminal rows */
-    int cols;                   /* Terminal columns */
+    int columns;                /* Terminal columns */
     bool raw;                   /* True if raw mode is active */
     volatile sig_atomic_t resized;  /* Resize flag (signal-safe) */
 } _term_state = {
-    .rows = 24,
-    .cols = 80,
-    .initialized = false,
+    .rows = VIB_TERM_DEFAULT_ROWS,
+    .columns = VIB_TERM_DEFAULT_COLUMNS,
+    .raw = false,
     .resized = 0,
 };
 
@@ -47,7 +50,7 @@ static void term_enter_raw_mode_();
 static void term_leave_raw_mode_();
 static void term_setup_raw_mode_signals_();
 static void term_default_signal_handler_(int sig);
-static void term_winch_handler_(int sig);
+static void term_sig_winch_handler_(int sig);
 static void term_query_size_(void);
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -56,7 +59,29 @@ static void term_query_size_(void);
 
 COPIED result_t vib_term_init()
 {
-    TODO;
+    if (_term_state.raw)
+    {
+        return RESULT_OK(1);
+    }
+
+    /* must be a terminal */
+    if (0 == isatty(STDERR_FILENO))
+    {
+        return RESULT_ERR(1);
+    }
+
+    /* save original terminal attributes */
+    if (-1 == tcgetattr(STDIN_FILENO, &_term_state.original))
+    {
+        return RESULT_ERR(2);
+    }
+
+    term_enter_raw_mode_();
+    TODO; // ...
+
+    atexit(vib_term_quit);
+
+    return RESULT_OK(0);
 }
 
 void vib_term_quit()
@@ -68,8 +93,7 @@ void vib_term_quit()
 
     TODO;
     // ...
-
-    _term_state.raw = false;
+    term_leave_raw_mode_();
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -125,6 +149,7 @@ static void term_enter_raw_mode_()
     term.c_cc[VTIME] = 0;
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
+    _term_state.raw = true;
 }
 
 static void term_leave_raw_mode_()
@@ -134,7 +159,41 @@ static void term_leave_raw_mode_()
         return;
     }
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &_term_state.original);
+    _term_state.raw = false;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Signal Handling
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+static void term_setup_raw_mode_signals_()
+{
+    struct sigaction sa = { 0 };
+
+    sa.sa_handler = term_default_signal_handler_;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    sigaction(SIGINT, &sa, NIL);
+    sigaction(SIGTERM, &sa, NIL);
+
+    /* Handler for SIGWINCH — window resize */
+    sa.sa_handler = term_sig_winch_handler_;
+    sa.sa_flags = SA_RESTART; // restart interrupted syscalls
+    sigaction(SIGWINCH, &sa, NIL);
+}
+
+static void term_default_signal_handler_(int sig)
+{
+    (void) sig;
+    vib_term_quit();
+    _exit(128 + sig);
+}
+
+static void term_sig_winch_handler_(int sig)
+{
+    (void) sig;
+    _term_state.resized = 1;
+}
 
 
