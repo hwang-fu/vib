@@ -67,3 +67,4 @@ void vib_tui_use_alternate_buffer();
 void vib_tui_toggle_buffer();
 void vib_terminal_flush();
 
+COPIED char vib_terminal_read_byte();

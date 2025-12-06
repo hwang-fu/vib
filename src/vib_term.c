@@ -35,12 +35,12 @@
  * ───────────────────────────────────────────────────────────────────────────── */
 
 static struct {
-    COPIED struct termios original;    /* Original terminal attributes */
+    COPIED struct termios original;         /* Original terminal attributes */
     COPIED uint64_t rows;                   /* Terminal rows */
     COPIED uint64_t columns;                /* Terminal columns */
-    COPIED bool raw;                   /* True if raw mode is active */
-    COPIED bool alt;                    /* True if alternate buffer is active */
-    COPIED volatile sig_atomic_t resized;  /* Resize flag (signal-safe) */
+    COPIED bool raw;                        /* True if raw mode is active */
+    COPIED bool alt;                        /* True if alternate buffer is active */
+    COPIED volatile sig_atomic_t resized;   /* Resize flag (signal-safe) */
 } _terminal_state = {
     .rows    = VIB_TERMINAL_DEFAULT_ROWS,
     .columns = VIB_TERMINAL_DEFAULT_COLUMNS,
@@ -341,3 +341,10 @@ void vib_terminal_flush()
 {
     fflush(stdout);
 }
+
+COPIED char vib_terminal_read_byte()
+{
+    unsigned char c;
+    return (1 == read(STDIN_FILENO, &c, 1)) ? c : -1;
+}
+
