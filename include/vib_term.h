@@ -6,6 +6,7 @@
  * Handles raw mode, screen operations, terminal size,
  * and ensures clean restoration on exit.
  */
+#include <unistd.h>
 
 #include "common.h"
 #include "result.h"
@@ -25,17 +26,38 @@ COPIED result_t vib_terminal_init();
  */
 void vib_terminal_quit();
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Terminal Info
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 COPIED uint64_t vib_terminal_get_rows();
 COPIED uint64_t vib_terminal_get_columns();
-
-/**
- * Refresh terminal size (call after resize).
- */
+COPIED bool vib_terminal_was_resized(void);
 void vib_terminal_size_update();
 
-/**
- * Check if terminal was resized since last check.
- * Clears the flag after reading.
- */
-COPIED bool vib_terminal_was_resized(void);
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Terminal Screen (TUI) Operations
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+#define vib_terminal_write(sequence, len)       \
+        write(STDOUT_FILENO, sequence, len)
+
+/** Clear entire screen. */
+void vib_terminal_clear();
+
+/** Move cursor to top-left (1,1). */
+void vib_terminal_cursor_home();
+
+/** Move cursor to specified position (1-indexed). */
+void vib_terminal_cursor_move(COPIED uint64_t row, COPIED uint64_t column);
+
+/** Hide cursor. */
+void vib_terminal_cursor_hide();
+
+/** Show cursor. */
+void vib_terminal_cursor_show();
+
+/** Flush stdout. */
+void vib_terminal_flush();
 

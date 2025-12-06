@@ -241,3 +241,34 @@ COPIED bool vib_terminal_was_resized(void)
     }
     return false;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Terminal Screen (TUI) Operations
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+
+void vib_terminal_clear()
+{
+}
+
+void vib_terminal_cursor_home()
+{
+}
+
+void vib_terminal_cursor_move(COPIED uint64_t row, COPIED uint64_t column)
+{
+}
+
+void vib_terminal_cursor_hide()
+{
+}
+
+void vib_terminal_cursor_show()
+{
+}
+
+void vib_terminal_flush()
+{
+}
+
+
