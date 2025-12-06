@@ -121,6 +121,11 @@ static void debug_sign_()
 void debug_(BORROWED const char * filename, COPIED const int line, BORROWED const char * fmt, ...) {
     debug_sign_();
 
+    crayon_bold(stderr);
+    fprintf(stderr, "%s: line %d", filename, line);
+    crayon_end(stderr);
+    fputs(LF, stderr);
+
     va_list args;
     va_start(args, fmt);
     fputs(TAB, stderr);
