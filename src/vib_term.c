@@ -72,7 +72,7 @@ COPIED result_t vib_terminal_init()
     }
 
     /* must be a terminal */
-    if (0 == isatty(STDERR_FILENO))
+    if (0 == isatty(STDIN_FILENO))
     {
         return RESULT_ERR(1);
     }
@@ -86,6 +86,7 @@ COPIED result_t vib_terminal_init()
     terminal_enter_raw_mode_();
     terminal_setup_raw_mode_signals_();
     terminal_size_query_();
+    vib_tui_use_alternate_buffer();
 
     atexit(vib_terminal_quit);
 
@@ -102,6 +103,7 @@ void vib_terminal_quit()
     vib_terminal_cursor_show();
     vib_terminal_clear();
     vib_terminal_cursor_home();
+    vib_tui_use_normal_buffer();
 
     terminal_leave_raw_mode_();
 }
