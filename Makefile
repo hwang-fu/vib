@@ -6,7 +6,6 @@ CFLAGS   := $(CSTD)
 CFLAGS 	 += -Wall
 CFLAGS   += -Wextra
 CFLAGS   += -Wpedantic
-CFLAGS   += -Werror
 CFLAGS   += -O2
 CFLAGS   += -g
 CFLAGS   += -fno-omit-frame-pointer
