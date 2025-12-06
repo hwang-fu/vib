@@ -7,6 +7,7 @@
  * and ensures clean restoration on exit.
  */
 #include <unistd.h>
+#include <stdarg.h>
 
 #include "common.h"
 #include "result.h"
@@ -43,6 +44,9 @@ void vib_terminal_size_update();
 #define vib_terminal_write(sequence, len)       \
         write(STDOUT_FILENO, sequence, len)
 
+void vib_terminal_writef(BORROWED const char * fmt, ...);
+void vib_terminal_writef_owned(OWNED char * fmt, ...);
+
 /** Clear entire screen. */
 void vib_terminal_clear();
 
@@ -57,7 +61,4 @@ void vib_terminal_cursor_hide();
 
 /** Show cursor. */
 void vib_terminal_cursor_show();
-
-/** Flush stdout. */
-void vib_terminal_flush();
 

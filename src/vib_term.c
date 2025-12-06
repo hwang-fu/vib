@@ -20,15 +20,15 @@
 #define ESC                     "\x1b"
 #define CSI                     ESC "["
 
-#define VIB_NORMAL_BUFFER       (CSI "?1049l")  // switch to normal buffer
-#define VIB_ALTERNATE_BUFFER    (CSI "?1049h")  // switch to alternate buffer
+#define VIB_NORMAL_BUFFER       (CSI "?1049l")      // switch to normal buffer
+#define VIB_ALTERNATE_BUFFER    (CSI "?1049h")      // switch to alternate buffer
 
-#define VIB_CURSOR_HOME         (CSI "H")       // move cursor to (1,1) which is the top-left corner
-#define VIB_CURSOR_HIDE         (CSI "?25l")    // hide cursor
-#define VIB_CURSOR_SHOW         (CSI "?25h")    // show cursor
-#define VIB_CURSOR_LOCATION     (CSI "%d;%dH")  // move cursor to (row, column)
+#define VIB_CURSOR_HOME         (CSI "H")           // move cursor to (1,1) which is the top-left corner
+#define VIB_CURSOR_HIDE         (CSI "?25l")        // hide cursor
+#define VIB_CURSOR_SHOW         (CSI "?25h")        // show cursor
+#define VIB_CURSOR_LOCATION     (CSI "%lu;%luH")    // move cursor to (row, column)
 
-#define VIB_TERMINAL_CLR        (CSI "2J")      // clear the entire terminal screen
+#define VIB_TERMINAL_CLR        (CSI "2J")          // clear the entire terminal screen
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Module State
@@ -246,29 +246,58 @@ COPIED bool vib_terminal_was_resized(void)
  * Terminal Screen (TUI) Operations
  * ───────────────────────────────────────────────────────────────────────────── */
 
+void vib_terminal_writef(BORROWED const char * fmt, ...)
+{
+    if (!fmt)
+    {
+        return;
+    }
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(stdout, fmt, args);
+    fflush(stdout);
+    va_end(args);
+}
+
+void vib_terminal_writef_owned(OWNED char * fmt, ...)
+{
+    if (!fmt)
+    {
+        return;
+    }
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(stdout, fmt, args);
+    fflush(stdout);
+    va_end(args);
+    free_smart(fmt);
+}
 
 void vib_terminal_clear()
 {
+    vib_terminal_write(VIB_TERMINAL_CLR, sizeof(VIB_TERMINAL_CLR) - 1);
 }
 
 void vib_terminal_cursor_home()
 {
+    vib_terminal_write(VIB_CURSOR_HOME, sizeof(VIB_CURSOR_HOME) - 1);
 }
 
 void vib_terminal_cursor_move(COPIED uint64_t row, COPIED uint64_t column)
 {
+    char coord[25] = { 0 };
+    int n = snprintf(coord, sizeof(coord), VIB_CURSOR_LOCATION, row, column);
+    vib_terminal_write(coord, n);
 }
 
 void vib_terminal_cursor_hide()
 {
+    vib_terminal_write(VIB_CURSOR_HIDE, sizeof(VIB_CURSOR_HIDE) - 1);
 }
 
 void vib_terminal_cursor_show()
 {
-}
-
-void vib_terminal_flush()
-{
+    vib_terminal_write(VIB_CURSOR_SHOW, sizeof(VIB_CURSOR_SHOW) - 1);
 }
 
 
