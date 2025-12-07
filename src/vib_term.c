@@ -342,7 +342,7 @@ void vib_terminal_flush()
     fflush(stdout);
 }
 
-COPIED int32_t vib_terminal_read_byte()
+COPIED int32_t vib_terminal_read_raw_byte()
 {
     unsigned char c;
     return (1 == read(STDIN_FILENO, &c, 1)) ? c : -1;
