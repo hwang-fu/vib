@@ -22,8 +22,8 @@
 static void set_read_timeout_(COPIED bool enable);
 static COPIED int32_t read_byte_timeout_();
 static COPIED vib_key_t parse_escape_sequence_();
-static COPIED vib_key_t parse_csi_sequence_(BORROWED const unsigned char * seq, int len);
-static COPIED vib_key_t parse_ss3_sequence_(BORROWED const unsigned char * seq, int len);
+static COPIED vib_key_t parse_csi_sequence_(BORROWED const unsigned char * seq, COPIED int len);
+static COPIED vib_key_t parse_ss3_sequence_(BORROWED const unsigned char * seq, COPIED int len);
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Timeout Mode Control
@@ -59,3 +59,8 @@ static void set_read_timeout_(COPIED bool enable)
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
+static COPIED int32_t read_byte_timeout_()
+{
+    unsigned char c;
+    return (1 == read(STDIN_FILENO, &c, 1)) ? c : -1;
+}
