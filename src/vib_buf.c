@@ -121,16 +121,22 @@ static COPIED result_t vib_buffer_mmap_(BORROWED vib_buffer_t * buf)
 {
     if (!buf || buf->fd < 0 || buf->size == 0)
     {
-        return RESULT_ERR(1);
+        return RESULT_ERR(-1);
     }
 
     void * data = mmap(nil, buf->size, PROT_READ, MAP_PRIVATE, buf->fd, 0);
     if (data == MAP_FAILED)
     {
-        return RESULT_ERR(2);
+        return RESULT_ERR(-2);
     }
 
-    posix_madvise(data, buf->size, POSIX_MADV_SEQUENTIAL);
+    // on success, it returns 0.
+    // on error, it returns a positive error number.
+    int err = posix_madvise(data, buf->size, POSIX_MADV_SEQUENTIAL);
+    if(err != 0)
+    {
+        return RESULT_ERR(err)
+    }
 
     buf->data    = CAST(data, uint8_t*);
     buf->is_mmap = true;
