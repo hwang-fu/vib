@@ -68,11 +68,11 @@ COPIED result_t vib_buffer_open(BORROWED const char * path)
     }
 
     OWNED vib_buffer_t * buf = new(sizeof(vib_buffer_t));
-    buf->filename    = strdup_smart(path);
-    buf->fd      = fd;
-    buf->data    = NIL;
-    buf->size    = CAST(st.st_size, uint64_t);
-    buf->is_mmap = false;
+    buf->filename = strdup_smart(path);
+    buf->fd       = fd;
+    buf->data     = NIL;
+    buf->size     = CAST(st.st_size, uint64_t);
+    buf->is_mmap  = false;
 
     if (RESULT_IS_ERR(vib_buffer_mmap_(buf)))
     {
@@ -130,7 +130,7 @@ static COPIED result_t vib_buffer_mmap_(BORROWED vib_buffer_t * buf)
         return RESULT_ERR(2);
     }
 
-    madvise(data, buf->size, MADV_SEQUENTIAL);
+    posix_madvise(data, buf->size, POSIX_MADV_SEQUENTIAL);
 
     buf->data    = CAST(data, uint8_t*);
     buf->is_mmap = true;
