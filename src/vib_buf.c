@@ -168,6 +168,10 @@ COPIED bool vib_buffer_is_mmap(BORROWED vib_buffer_t * buf)
     return buf ? buf->is_mmap : false;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Data Access
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 COPIED int32_t vib_buffer_byte_at(BORROWED vib_buffer_t * buf, COPIED const uint64_t offset)
 {
 }
@@ -180,8 +184,24 @@ OWNED uint8_t * vib_buffer_read_bytes(
 {
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Error Handling
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 BORROWED const char * vib_buffer_strerror(COPIED const vib_buffer_err_t err)
 {
+    switch (err)
+    {
+        case VIB_BUF_OK:                return "Success";
+        case VIB_BUF_ERR_NULL_PATH:     return "Path is NULL";
+        case VIB_BUF_ERR_OPEN_FAILED:   return "Failed to open file";
+        case VIB_BUF_ERR_STAT_FAILED:   return "Failed to stat file";
+        case VIB_BUF_ERR_NOT_REGULAR:   return "Not a regular file";
+        case VIB_BUF_ERR_MMAP_FAILED:   return "Failed to memory map file";
+        case VIB_BUF_ERR_ALLOC_FAILED:  return "Memory allocation failed";
+        case VIB_BUF_ERR_EMPTY_FILE:    return "File is empty";
+        default:                        return "Unknown error";
+    }
 }
 
 
