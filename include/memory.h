@@ -15,7 +15,7 @@
  */
 #define free_smart(ptr)                                             \
         do {                                                        \
-            if ( (ptr) ) free( ptr );                               \
+            if ( (ptr) ) free(CAST(ptr, void*));                    \
             ptr = NIL;                                              \
         } while (0)
 
