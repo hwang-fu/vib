@@ -139,23 +139,33 @@ static COPIED result_t vib_buffer_mmap_(BORROWED vib_buffer_t * buf)
 }
 
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * File Info
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 OWNED char * vib_buffer_get_path(BORROWED vib_buffer_t * buf)
 {
+    return buf ? strdup_smart(buf->filename) : strdup_smart("");
 }
+
 COPIED uint64_t vib_buffer_get_size(BORROWED vib_buffer_t * buf)
 {
+    return buf ? buf->size : 0;
 }
 
 COPIED result_t vib_buffer_try_get_path(BORROWED vib_buffer_t * buf)
 {
+    return buf ? RESULT_OK(strdup_smart(buf->filename)) : RESULT_ERR(1);
 }
 
 COPIED result_t vib_buffer_try_get_size(BORROWED vib_buffer_t * buf)
 {
+    return buf ? RESULT_OK(buf->size) : RESULT_ERR(1);
 }
 
 COPIED bool vib_buffer_is_mmap(BORROWED vib_buffer_t * buf)
 {
+    return buf ? buf->is_mmap : false;
 }
 
 COPIED int32_t vib_buffer_byte_at(BORROWED vib_buffer_t * buf, COPIED const uint64_t offset)
