@@ -178,15 +178,44 @@ COPIED bool vib_buffer_is_mmap(BORROWED vib_buffer_t * buf)
  * Data Access
  * ───────────────────────────────────────────────────────────────────────────── */
 
-COPIED int32_t vib_buffer_byte_at(BORROWED vib_buffer_t * buf, COPIED const uint64_t offset)
+COPIED int32_t vib_buffer_byte_at(
+    BORROWED vib_buffer_t * buf,
+    COPIED const uint64_t offset
+)
+{
+    if (!buf || offset >= buf->size)
+    {
+        return -1;
+    }
+
+    if (buf->is_mmap && buf->data)
+    {
+        return buf->data[offset];
+    }
+
+    /* fallback: pread */
+    uint8_t byte;
+    if (pread(buf->fd, &byte, 1, (off_t) offset) != 1)
+    {
+        return -2;
+    }
+    return byte;
+}
+
+BORROWED const uint8_t * vib_buffer_data_at(
+    BORROWED vib_buffer_t * buf,
+    COPIED uint64_t offset,
+    BORROWED uint64_t * len
+)
 {
 }
 
 OWNED uint8_t * vib_buffer_read_bytes(
-        BORROWED vib_buffer_t * buf,
-        COPIED uint64_t offset,
-        COPIED uint64_t bytesExpected,
-        BORROWED uint64_t * bytesActual)
+    BORROWED vib_buffer_t * buf,
+    COPIED uint64_t offset,
+    COPIED uint64_t bytesExpected,
+    BORROWED uint64_t * bytesActual
+)
 {
 }
 
