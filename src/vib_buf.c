@@ -208,6 +208,24 @@ BORROWED const uint8_t * vib_buffer_data_at(
     BORROWED uint64_t * len
 )
 {
+    if (!buf || !buf->is_mmap || !buf->data || offset >= buf->size)
+    {
+        if (len)
+        {
+            *len = 0;
+        }
+        return NIL;
+    }
+
+    uint64_t available = buf->size - offset;
+    if (len)
+    {
+        if (*len > available || *len == 0)
+        {
+            *len = available;
+        }
+    }
+    return buf->data + offset;
 }
 
 OWNED uint8_t * vib_buffer_read_bytes(
