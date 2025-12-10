@@ -92,6 +92,25 @@ COPIED result_t vib_buffer_open_owned(OWNED const char * path)
 
 void vib_buffer_close(OWNED vib_buffer_t * buf)
 {
+    if (!buf)
+    {
+        return;
+    }
+
+    if (buf->is_mmap && buf->data)
+    {
+        munmap(buf->data, buf->size);
+        buf->data = NIL;
+    }
+
+    if (buf->fd >= 0)
+    {
+        close(buf->fd);
+        buf->fd = -1;
+    }
+
+    free_smart(buf->path);
+    free_smart(buf);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
