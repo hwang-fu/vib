@@ -68,7 +68,7 @@ COPIED result_t vib_buffer_open(BORROWED const char * path)
     }
 
     OWNED vib_buffer_t * buf = new(sizeof(vib_buffer_t));
-    buf->path    = strdup_smart(path);
+    buf->filename    = strdup_smart(path);
     buf->fd      = fd;
     buf->data    = NIL;
     buf->size    = CAST(st.st_size, uint64_t);
@@ -109,7 +109,7 @@ void vib_buffer_close(OWNED vib_buffer_t * buf)
         buf->fd = -1;
     }
 
-    free_smart(buf->path);
+    free_smart(buf->filename);
     free_smart(buf);
 }
 
