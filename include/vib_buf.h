@@ -13,7 +13,7 @@
 typedef enum vib_buffer_err_t
 {
     VIB_BUF_OK = 0,
-    VIB_BUF_ERR_NULL_PATH,
+    VIB_BUF_ERR_NIL_PATH,
     VIB_BUF_ERR_OPEN_FAILED,
     VIB_BUF_ERR_STAT_FAILED,
     VIB_BUF_ERR_NOT_REGULAR,
@@ -37,9 +37,29 @@ COPIED result_t vib_buffer_try_get_size(BORROWED vib_buffer_t * buf);
 /* whether the buffer is using mmap or not */
 COPIED bool vib_buffer_is_mmap(BORROWED vib_buffer_t * buf);
 
-
+/**
+ * Read a single byte at the given offset.
+ *
+ * @param buf       File buffer
+ * @param offset    Byte offset (0-indexed)
+ * @return          Byte value (0-255) or -1 if out of bounds
+ */
 COPIED int32_t vib_buffer_byte_at(BORROWED vib_buffer_t * buf, COPIED const uint64_t offset);
 
+/**
+ * Get direct pointer to data at offset (only for mmap buffers).
+ * Returns NIL if not mmap or offset out of bounds.
+ *
+ * @param buf       File buffer
+ * @param offset    Byte offset
+ * @param len       Requested length (adjusted if exceeds file size)
+ * @return          Pointer to data or NIL
+ */
+BORROWED const uint8_t * vib_buffer_data_at(BORROWED vib_buffer_t * buf, COPIED uint64_t offset, BORROWED uint64_t * len);
+
+/**
+ * Read a range of bytes into a destination buffer.
+ */
 OWNED uint8_t * vib_buffer_read_bytes(
         BORROWED vib_buffer_t * buf,
         COPIED uint64_t offset,

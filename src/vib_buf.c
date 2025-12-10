@@ -39,7 +39,7 @@ COPIED result_t vib_buffer_open(BORROWED const char * path)
 {
     if (!path)
     {
-        return RESULT_ERR(VIB_BUF_ERR_NULL_PATH);
+        return RESULT_ERR(VIB_BUF_ERR_NIL_PATH);
     }
 
     int fd = open(path, O_RDONLY);
@@ -135,7 +135,7 @@ static COPIED result_t vib_buffer_mmap_(BORROWED vib_buffer_t * buf)
     int err = posix_madvise(data, buf->size, POSIX_MADV_SEQUENTIAL);
     if(err != 0)
     {
-        return RESULT_ERR(err)
+        return RESULT_ERR(err);
     }
 
     buf->data    = CAST(data, uint8_t*);
@@ -235,6 +235,7 @@ OWNED uint8_t * vib_buffer_read_bytes(
     BORROWED uint64_t * bytesActual
 )
 {
+    TODO;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -246,7 +247,7 @@ BORROWED const char * vib_buffer_strerror(COPIED const vib_buffer_err_t err)
     switch (err)
     {
         case VIB_BUF_OK:                return "Success";
-        case VIB_BUF_ERR_NULL_PATH:     return "Path is NULL";
+        case VIB_BUF_ERR_NIL_PATH:      return "Path is NULL";
         case VIB_BUF_ERR_OPEN_FAILED:   return "Failed to open file";
         case VIB_BUF_ERR_STAT_FAILED:   return "Failed to stat file";
         case VIB_BUF_ERR_NOT_REGULAR:   return "Not a regular file";
